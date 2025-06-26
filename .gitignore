@@ -1,3 +1,3 @@
 *.o
 plotter
-*.exe
+data_analyzer/data_analyzer

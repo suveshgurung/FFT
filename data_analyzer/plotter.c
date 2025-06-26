@@ -6,7 +6,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
-void _SDL_Error_Handler(const char *calling_function_name, SDL_Window *window, SDL_Renderer *renderer);
+void _SDL_Error_Handler(const char *calling_function_name, SDL_Renderer *renderer, SDL_Window *window);
 void Draw_Axis(SDL_Renderer *renderer, SDL_Window *window);
 
 int main() {
@@ -17,12 +17,12 @@ int main() {
 
   SDL_Window *window = SDL_CreateWindow("Graph plotter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_FULLSCREEN_DESKTOP);
   if (window == NULL) {
-    _SDL_Error_Handler("SDL_CreateWindow", window, NULL);
+    _SDL_Error_Handler("SDL_CreateWindow", NULL, window);
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (renderer == NULL) {
-    _SDL_Error_Handler("SDL_CreateRenderer", window, renderer);
+    _SDL_Error_Handler("SDL_CreateRenderer", renderer, window);
   }
 
   int width, height;
@@ -30,7 +30,7 @@ int main() {
 
   SDL_Texture *axis_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
   if (axis_texture == NULL) {
-    _SDL_Error_Handler("SDL_CreateTexture", window, renderer);
+    _SDL_Error_Handler("SDL_CreateTexture", renderer, window);
   }
 
   SDL_SetRenderTarget(renderer, axis_texture);
@@ -62,7 +62,7 @@ int main() {
   return 0;
 }
 
-void _SDL_Error_Handler(const char *calling_function_name, SDL_Window *window, SDL_Renderer *renderer) {
+void _SDL_Error_Handler(const char *calling_function_name, SDL_Renderer *renderer, SDL_Window *window) {
   SDL_Log("%s error: %s", calling_function_name, SDL_GetError());
 
   if (renderer != NULL) {
@@ -80,9 +80,9 @@ void Draw_Axis(SDL_Renderer *renderer, SDL_Window *window) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
   if (SDL_RenderDrawLine(renderer, 80, 1000, 1840, 1000) != 0) {
-    _SDL_Error_Handler("SDL_RenderDrawLine", window);
+    _SDL_Error_Handler("SDL_RenderDrawLine", renderer, window);
   }
   if (SDL_RenderDrawLine(renderer, 80, 80, 80, 1000) != 0) {
-    _SDL_Error_Handler("SDL_RenderDrawLine", window);
+    _SDL_Error_Handler("SDL_RenderDrawLine", renderer, window);
   }
 }
