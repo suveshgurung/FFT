@@ -1,12 +1,11 @@
 #define SOUND_SENSOR_DIGITAL_INPUT 22
 #define SOUND_SENSOR_ANALOG_INPUT 4
 
-#define SAMPLING_FREQUENCY 400
-#define SAMPLE_TIME 2500        // 2500 microseconds sampling time
+#define SAMPLING_FREQUENCY 500
+#define SAMPLE_TIME 2000        // 2500 microseconds sampling time
 
 #define ADC_MAX_VALUE 4095.0
 #define ADC_MAX_VOLT 3.3
-// #define BASE_VALUE 2.23
 
 unsigned long current_time = 0, previous_time = 0, elasped_time;
 unsigned long number_of_samples = 0;
@@ -38,17 +37,18 @@ void setup() {
 }
 
 void loop() {
-  float analog_value = analogRead(SOUND_SENSOR_ANALOG_INPUT);
-
   current_time = micros();
   elasped_time = current_time - previous_time;
 
   if (elasped_time > SAMPLE_TIME) {
+    float analog_value = analogRead(SOUND_SENSOR_ANALOG_INPUT);
     float analog_equivalent_voltage = (ADC_MAX_VOLT / ADC_MAX_VALUE) * analog_value;
+    analog_value = ADC_MAX_VALUE;
     if (analog_equivalent_voltage < calibrated_base_value) {
       number_of_samples++;
       analog_equivalent_voltage = calibrated_base_value - analog_equivalent_voltage;
       Serial.println(analog_equivalent_voltage);
+      analog_equivalent_voltage = calibrated_base_value;
     }
     previous_time = current_time;
   }
