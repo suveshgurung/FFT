@@ -1,4 +1,5 @@
 import serial.tools.list_ports
+from datetime import datetime
 
 ports = serial.tools.list_ports.comports()
 serial_instance = serial.Serial()
@@ -21,7 +22,32 @@ serial_instance.setDTR(False)
 serial_instance.setRTS(False)
 serial_instance.open()
 
+data_incoming = False
+data_array = []
+time_array = []
+
+start_time = datetime.now()
+
 while True:
     if serial_instance.in_waiting:
         packet = serial_instance.readline()
-        print(packet.decode('utf'))
+        data = packet.decode('utf').strip()
+
+        if data == "%":
+            data_incoming = True
+            start_time = datetime.now()
+            print("Collecting data now...")
+            continue
+        elif data == "%e":
+            data_incoming = False
+            break
+
+        if data_incoming:
+            end_time = datetime.now()
+            elasped_time_ms = (end_time - start_time).total_seconds() * 1000;
+
+            data_array.append(data)
+            time_array.append(elasped_time_ms)
+
+print(data_array)
+print(time_array)
