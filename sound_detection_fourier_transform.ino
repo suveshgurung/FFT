@@ -70,9 +70,11 @@ void loop() {
     }
   }
 
+  // Send a data end flag.
   if (!is_first_data) {
     if (elasped_timeout_time > TIMEOUT) {
       Serial.println("%e");
+      elasped_timeout_time = 0;
       is_first_data = 1;
     }
   }
