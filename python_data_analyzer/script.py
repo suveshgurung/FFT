@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import numpy as np
 import sys
+import os
 
 
 # Recursive FFT algorithm
@@ -75,6 +76,8 @@ def init_serial_port():
         if port_list[i].startswith("/dev/tty" + str(val)):
             port = "/dev/tty" + str(val)
 
+    os.system("clear")
+
     serial_instance.baudrate = 115200
     serial_instance.port = port
     serial_instance.setDTR(False)
@@ -92,7 +95,6 @@ def plot_raw_data(time_array, data_array):
     plt.ylabel("Voltage (V)")
 
     plt.gca().yaxis.set_major_locator(MultipleLocator(0.1))
-
     plt.tight_layout()
     plt.show()
 
@@ -123,8 +125,7 @@ def main_loop(serial_instance):
                 plot_data = input("Do you want to plot the data? (y/n)")
                 plot_data = plot_data.lower()
 
-                sampling_rate = len(data_array) / (max(time_array) / 1000.0)
-                print(sampling_rate)
+                sampling_rate = 4000.0
 
                 if plot_data == "y":
                     plot_raw_data(time_array, data_array)
